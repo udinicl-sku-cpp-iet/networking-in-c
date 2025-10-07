@@ -1,0 +1,71 @@
+/*
+2 ** talker.c -- a datagram "client" demo
+3 */
+4
+5 #include <stdio.h>
+6 #include <stdlib.h>
+7 #include <unistd.h>
+8 #include <errno.h>
+9 #include <string.h>
+10 #include <sys/types.h>
+11 #include <sys/socket.h>
+12 #include <netinet/in.h>
+13 #include <arpa/inet.h>
+14 #include <netdb.h>
+15
+16 #define SERVERPORT "4950" // the port users will be connecting to
+17
+18 int main(int argc, char *argv[])
+19 {
+20 int sockfd;
+21 struct addrinfo hints, *servinfo, *p;
+22 int rv;
+4
+https://beej.us/guide/bgnet/source/examples/talker.c
+Chapter 6. Client-Server Background 40
+23 int numbytes;
+24
+25 if (argc != 3) {
+26 fprintf(stderr,"usage: talker hostname message\n");
+27 exit(1);
+28 }
+29
+30 memset(&hints, 0, sizeof hints);
+31 hints.ai_family = AF_INET6; // set to AF_INET to use IPv4
+32 hints.ai_socktype = SOCK_DGRAM;
+33
+34 rv = getaddrinfo(argv[1], SERVERPORT, &hints, &servinfo);
+35 if (rv != 0) {
+36 fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+37 return 1;
+38 }
+39
+40 // loop through all the results and make a socket
+41 for(p = servinfo; p != NULL; p = p->ai_next) {
+42 if ((sockfd = socket(p->ai_family, p->ai_socktype,
+43 p->ai_protocol)) == -1) {
+44 perror("talker: socket");
+45 continue;
+46 }
+47
+48 break;
+49 }
+50
+51 if (p == NULL) {
+52 fprintf(stderr, "talker: failed to create socket\n");
+53 return 2;
+54 }
+55
+56 if ((numbytes = sendto(sockfd, argv[2], strlen(argv[2]), 0,
+57 p->ai_addr, p->ai_addrlen)) == -1) {
+58 perror("talker: sendto");
+59 exit(1);
+60 }
+61
+62 freeaddrinfo(servinfo);
+63
+64 printf("talker: sent %d bytes to %s\n", numbytes, argv[1]);
+65 close(sockfd);
+66
+67 return 0;
+68 }
