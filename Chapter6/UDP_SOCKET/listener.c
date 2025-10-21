@@ -29,9 +29,9 @@ void *get_in_addr(struct sockaddr *sa){
 int main(void){
   struct addrinfo hints;
   memset(&hints, 0, sizeof hints);
-  hints.ai_family = AF_INET6; // set to AF_INET to use IPv4
+  hints.ai_family   = AF_INET6; // set to AF_INET to use IPv4
   hints.ai_socktype = SOCK_DGRAM;// use UDP
-  hints.ai_flags = AI_PASSIVE; // use my IP
+  hints.ai_flags    = AI_PASSIVE; // use my IP
   struct addrinfo *servinfo;
   int rv = getaddrinfo(NULL, MYPORT, &hints, &servinfo);
   if (rv != 0) {
@@ -52,7 +52,8 @@ int main(void){
       continue;
     }
     break;
-  }if (p == NULL) {
+  }
+  if (p == NULL) {
     fprintf(stderr, "listener: failed to bind socket\n");
     return 2;
   }

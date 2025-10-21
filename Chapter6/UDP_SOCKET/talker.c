@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
   }
   struct addrinfo hints;
   memset(&hints, 0, sizeof hints);
-  hints.ai_family = AF_INET6; // set to AF_INET to use IPv4
+  hints.ai_family   = AF_UNSPEC; // set to AF_INET to use IPv4
   hints.ai_socktype = SOCK_DGRAM;
   
   struct addrinfo *servinfo;
@@ -43,7 +43,8 @@ int main(int argc, char *argv[])
       continue;
     }
     break;
-  }if (p == NULL) {
+  }
+  if (p == NULL) {
     fprintf(stderr, "talker: failed to create socket\n");
     return 2;
   }

@@ -43,7 +43,7 @@ int main(void)
   struct addrinfo hints, *servinfo, *p; //p iterator for servinfo
 
   memset(&hints, 0, sizeof hints); 
-  hints.ai_family =   AF_INET6;// ipv4 or ipv6 is the same
+  hints.ai_family =   AF_UNSPEC;// ipv4 or ipv6 is the same
   hints.ai_socktype = SOCK_STREAM;// tcp
   hints.ai_flags =    AI_PASSIVE; // use my IP
 
@@ -61,8 +61,7 @@ int main(void)
     }
 
     int value_to_set=1;
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &value_to_se
-		   t,sizeof(int) ) == -1) {
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &value_to_set, sizeof(int) ) == -1) {
       perror("setsockopt");
       exit(1);
     }
